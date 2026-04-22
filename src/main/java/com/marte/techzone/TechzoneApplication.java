@@ -1,13 +1,16 @@
 package com.marte.techzone;
 
 
+import com.marte.techzone.entities.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.marte.techzone.entities.BillEntity;
 import com.marte.techzone.entities.OrderEntity;
@@ -29,24 +32,18 @@ public class TechzoneApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        /*this.orderRepository.findAll().forEach(System.out::println);
-        var bill = BillEntity.builder()
-                .rfc("CASG990908NL6")
-                .totalAmount(BigDecimal.TEN)
-                .id("b-17")
-                .build();
-        this.billRepository.save(bill);
 
-        var order1 = OrderEntity.builder()
-                .createdAt(LocalDateTime.now())
-                .clientName("Marte Canseco")
-                .bill(bill)
-                .build();
+        var order = this.orderRepository.findById(2L).orElseThrow();
 
-        this.orderRepository.save(order1);*/
+        /*var product1 = ProductEntity.builder().quantity(BigInteger.ONE).build();
+        var product2 = ProductEntity.builder().quantity(BigInteger.TWO).build();
+        var product3 = ProductEntity.builder().quantity(BigInteger.TEN).build();
+        var products = List.of(product1, product2, product3);
+        order.setProducts(products);
+        products.forEach(product -> product.setOrder(order));*/
 
-        var orders = this.orderRepository.findById(17L).get();
+        order.getProducts().removeFirst();
 
-        this.orderRepository.delete(orders);
+        this.orderRepository.save(order);
     }
 }
