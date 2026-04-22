@@ -1,14 +1,19 @@
 package com.marte.techzone.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @Table(name = "bill")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class BillEntity {
     @Id
     @Column(nullable = false, length = 64)
@@ -23,4 +28,16 @@ public class BillEntity {
     @ToString.Exclude
     @OneToOne(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private OrderEntity order;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        BillEntity that = (BillEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

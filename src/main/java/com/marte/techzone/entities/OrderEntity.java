@@ -1,15 +1,19 @@
 package com.marte.techzone.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
-@Data
 @Table(name = "orders")
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class OrderEntity {
 
     @Id
@@ -20,7 +24,19 @@ public class OrderEntity {
     private String clientName;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
     @JoinColumn(name = "id_bill", nullable = false, unique = true)
     private BillEntity bill;
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderEntity that = (OrderEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
