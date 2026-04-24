@@ -44,4 +44,8 @@ public class OrderEntity {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    public void addProduct(ProductEntity product){
+        this.products.add(product);
+    }
 }

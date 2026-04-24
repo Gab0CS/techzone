@@ -25,5 +25,6 @@ public class CategoryEntity {
     private String description;
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<ProductCatalogEntity> productsCatalogs;
 }
