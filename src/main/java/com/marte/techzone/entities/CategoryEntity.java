@@ -1,5 +1,6 @@
 package com.marte.techzone.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,5 +27,6 @@ public class CategoryEntity {
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     @ToString.Exclude
+    @JsonIgnore
     private List<ProductCatalogEntity> productsCatalogs;
 }

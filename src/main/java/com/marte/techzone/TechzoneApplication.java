@@ -55,9 +55,9 @@ public class TechzoneApplication implements CommandLineRunner {
                 product.addCategory(office);
             }
             this.productCatalogRepository.save(product);
-        });*/
+        });
 
-        /*var random = new Random();
+        var random = new Random();
         var productsCatalog = new LinkedList<>(this.productCatalogRepository.findAll());
 
         IntStream.range(0, productsCatalog.size()).forEach(i -> {
@@ -75,6 +75,6 @@ public class TechzoneApplication implements CommandLineRunner {
             });*/
 
 
-        this.rejectProductRepository.findAll().forEach(System.out::println);
+        /*this.rejectProductRepository.findAll().forEach(System.out::println);*/
     }
 }
