@@ -13,7 +13,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "products_catalog")
+@Table(name = "products_catalog", indexes = {
+        @Index(name = "idx_product_name", columnList = "product_name")
+})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
