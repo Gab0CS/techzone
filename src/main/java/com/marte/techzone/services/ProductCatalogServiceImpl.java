@@ -1,17 +1,24 @@
 package com.marte.techzone.services;
 
+import com.marte.techzone.dtos.DateEval;
+import com.marte.techzone.dtos.ReportProduct;
 import com.marte.techzone.entities.ProductCatalogEntity;
 import com.marte.techzone.repositories.ProductCatalogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -21,6 +28,9 @@ import java.util.UUID;
 public class ProductCatalogServiceImpl implements ProductCatalogService {
 
     private final ProductCatalogRepository productCatalogRepository;
+
+    private static final int PAGE_SIZE = 5;
+    private static final int MIN_PAGE_SIZE = 2;
 
     @Override
     public ProductCatalogEntity findById(UUID id) {
@@ -45,22 +55,62 @@ public class ProductCatalogServiceImpl implements ProductCatalogService {
     }
 
     @Override
-    public List<ProductCatalogEntity> findByCategoryName(BigInteger id) {
-        return List.of();
+    public List<ProductCatalogEntity> findByCategoryId(Long id) {
+        return this.productCatalogRepository.getByCategory(id);
+    }
+
+    @Override
+    public List<ProductCatalogEntity> findByLaunchingDate(LocalDate date, DateEval key) {
+        if(key.equals(DateEval.AFTER)){
+            return this.productCatalogRepository.findByLaunchingDateAfter(date);
+        } else {
+            return this.productCatalogRepository.findByLaunchingDateBefore(date);
+        }
     }
 
     @Override
     public List<ProductCatalogEntity> findByBrandAndRating(String brand, Short rating) {
-        return List.of();
+        return this.productCatalogRepository.findByBrandAndRatingGreaterThan(brand, rating);
     }
 
     @Override
-    public Page<ProductCatalogEntity> findAll(String field, Boolean desc) {
-        return null;
+    public List<ProductCatalogEntity> findByBrandOrRating(String brand, Short rating) {
+        return this.productCatalogRepository.findByBrandOrRatingGreaterThan(brand, rating);
     }
 
     @Override
-    public Page<ProductCatalogEntity> findAllByBrand(String brand) {
-        return null;
+    public List<ReportProduct> makeReport() {
+        return this.productCatalogRepository.findAndMakeReport();
     }
+
+    @Override
+    public Page<ProductCatalogEntity> findAll(String field, Boolean desc, Integer page) {
+        var sorting = Sort.by("name");
+
+        if(Objects.nonNull(field)){
+            switch (field){
+                case "brand" -> sorting = Sort.by("brand");
+                case "price" -> sorting = Sort.by("price");
+                case "launchingDate" -> sorting = Sort.by("launchingDate");
+                case "rating" -> sorting = Sort.by("rating");
+                default -> throw new IllegalArgumentException("Invalid field + " + field);
+            }
+        }
+        return (desc) ?
+                this.productCatalogRepository.findAll(PageRequest.of(page, PAGE_SIZE, sorting.descending()))
+                : this.productCatalogRepository.findAll(PageRequest.of(page, PAGE_SIZE, sorting.ascending()));
+
+
+    }
+
+    @Override
+    public Page<ProductCatalogEntity> findAllByBrand(String brand, Integer page) {
+        return this.productCatalogRepository.findAllByBrand(brand, PageRequest.of(page, MIN_PAGE_SIZE));
+    }
+
+    @Override
+    public Integer countByBrand(String brand) {
+        return this.productCatalogRepository.countTotalProductsByBrandStoredProcedure(brand);
+    }
+
 }
