@@ -44,7 +44,7 @@ public class TechzoneApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        /*final var home = this.categoriesRepository.findById(1L).orElseThrow();
+       /*final var home = this.categoriesRepository.findById(1L).orElseThrow();
         final var office = this.categoriesRepository.findById(2L).orElseThrow();
 
         this.productCatalogRepository.findAll().forEach(product -> {

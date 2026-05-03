@@ -43,7 +43,6 @@ public class ProductCatalogEntity {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.DETACH,
-            CascadeType.MERGE,
             CascadeType.PERSIST,
             CascadeType.REFRESH})
     @JoinTable(name = "product_join_category",
