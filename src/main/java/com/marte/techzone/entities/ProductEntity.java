@@ -19,10 +19,11 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigInteger quantity;
+    private Long quantity;
 
     @ManyToOne
     @JoinColumn(name = "id_order")
+    @ToString.Exclude
     private OrderEntity order;
 
     @OneToOne(cascade = CascadeType.ALL)
